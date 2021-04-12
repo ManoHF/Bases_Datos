@@ -97,12 +97,28 @@ Dada las mínimas diferencias obtenida en las tablas, finalmente podemos afirmar
 
 Necesitamos determinas las medidas de un cilindro que almacena blu-rays en cajas de 30cm x 21cm x 8cm para un espacio total de 5040 centímetros cúbicos y un peso de 500 gr por película. Sabemos que un clindro 50 kg como máximo y cada tienda tiene un cilindro con mismas dimensiones. Como suposición adicional, decimos que se tiene un número máximo de películas por tienda, por lo que la llegada de algunas copias, puede implicar la salida de otras. De esa forma las tiendas no enfrentan el problema de falta de clindros o de cilindros en desuso.
 
-Primero obtenemos el número de películas por tienda con el siguiente query:
+Primero obtenemos el número de películas por tienda; de ahí vemos dos tiendas con 2,270 y 2,311 películas, por lo que podemos suponer que se tiene un inventario máximo de 2,311 películas agregando 50 como de "colchón" (para estrenos) que tenemos que organizar en algún número de cilindros. Después pasamos a generar las medidas del cilindro para finalmente obtener su volumen.
 
 ```
-select i.store_id, count(i.film_id) from inventory i group by i.store_id 
+with num_pelis as (
+	select i.store_id, count(i.inventory_id) + 50 as inventario from inventory i group by i.store_id)
+select np.store_id, ceil(np.inventario::float/100) as num_cilindros from num_pelis np group by np.store_id, np.inventario;
 ```
 
-De ahí vemos dos tiendas con 2,270 y 2,311 películas, por lo que podemos suponer que se tiene un inventario máximo de 2,311 películas que tenemos que organizar en algún número de cilindros.
+1) Se obtiene el número de películas por tienda y se agrega 50 para tener espacio extra para estrenos y tener tiempo de actualizar el catálogo
+2) Se divide entre cien que es el número de películas que puede sostener un cílindro. Se usa la función ceil(), ya que cada cilindro tiene que ser completo
 
-...
+```
+with medidas as (
+	select ((21*5)+50)::float/2 as radio, 0.500*10 as peso_por_nivel, (div(50, 5)*20)+50 as altura)
+select (power(m.radio,2)*pi()*m.altura)::text || ' cm3' as volumen_cilindro from medidas m
+```
+
+3) Se obtienen las medidas dado que nuestro diseño es de la siguiente manera
+4) El radio lo elegimos como la distancia que fuera más grandes (5 películas dado su ancho (21 cm) o 2 películas dado su largo (30 cm)). Además se añade cierto espacio entre cada película para el agarre del brazo
+5) Obtenemos el peso por nivel dado que sabemos que cada empaque pesa 500 gr y finalmente sacamos el número de niveles (altura) usando la restricción de 50 kg. Aquí sí podemos usar div(), ya que es una división de enteros que resultará un entrero sin perder datos (la use para practicar); sin embargo, en otra circunstancia convendría usar el símbolo  y un cast nada más para mejor eficiencia.
+
+Con base en esto tenemos nuestro diseño, el número de cilindros en cada store y su volumen:
+
+![IMG_0201](https://user-images.githubusercontent.com/70402438/114438416-5db88580-9b8d-11eb-9dec-2fb423f55bad.JPG) con 24 cilindros necesarios en ambas tiendas, 10 niveles por cilindro y un volumen de 4717.297719 metros cúbicos
+
