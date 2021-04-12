@@ -93,7 +93,7 @@ select ats.id, ats.last_name, ats.first_name, ats.tiempo_promedio_rent - ats.tie
 
 Dada las mínimas diferencias obtenida en las tablas, finalmente podemos afirmar que **ambos promedios son muy parecidos**.
 
-## Tarea 3: optimización de películas
+## Tarea 3: automatización de películas
 
 Necesitamos determinas las medidas de un cilindro que almacena blu-rays en cajas de 30cm x 21cm x 8cm para un espacio total de 5040 centímetros cúbicos y un peso de 500 gr por película. Sabemos que un clindro 50 kg como máximo y cada tienda tiene un cilindro con mismas dimensiones. Como suposición adicional, decimos que se tiene un número máximo de películas por tienda, por lo que la llegada de algunas copias, puede implicar la salida de otras. De esa forma las tiendas no enfrentan el problema de falta de clindros o de cilindros en desuso.
 
