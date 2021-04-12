@@ -64,7 +64,6 @@ select * from histogram('(with rental_ordered as(
 select rl.id, c.last_name, c.first_name, avg(rl.time_bt_rentals) as tiempo_promedio from rental_lapse rl 
 join customer c on rl.id = c.customer_id where rl.time_bt_rentals is not null
 group by rl.id, c.last_name, c.first_name order by rl.id) as t' , 'tiempo_promedio');
-
 ```
 
 ![tarea2_4](https://user-images.githubusercontent.com/70402438/114290494-bc72e780-9a45-11eb-80e0-1ae70e884886.png)
@@ -95,3 +94,15 @@ select ats.id, ats.last_name, ats.first_name, ats.tiempo_promedio_rent - ats.tie
 Dada las mínimas diferencias obtenida en las tablas, finalmente podemos afirmar que **ambos promedios son muy parecidos**.
 
 ## Tarea 3: optimización de películas
+
+Necesitamos determinas las medidas de un cilindro que almacena blu-rays en cajas de 30cm x 21cm x 8cm para un espacio total de 5040 centímetros cúbicos y un peso de 500 gr por película. Sabemos que un clindro 50 kg como máximo y cada tienda tiene un cilindro con mismas dimensiones. Como suposición adicional, decimos que se tiene un número máximo de películas por tienda, por lo que la llegada de algunas copias, puede implicar la salida de otras. De esa forma las tiendas no enfrentan el problema de falta de clindros o de cilindros en desuso.
+
+Primero obtenemos el número de películas por tienda con el siguiente query:
+
+```
+select i.store_id, count(i.film_id) from inventory i group by i.store_id 
+```
+
+De ahí vemos dos tiendas con 2,270 y 2,311 películas, por lo que podemos suponer que se tiene un inventario máximo de 2,311 películas que tenemos que organizar en algún número de cilindros.
+
+...
